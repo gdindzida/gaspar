@@ -8,7 +8,9 @@ import streamer.base as base
 
 class KittiStreamer(base.DatasetStreamer):
     def __init__(
-        self, data_root: str, dataset_streamer_adapter: base.DatasetStreamerAdapter
+        self,
+        data_root: str,
+        dataset_streamer_adapter: base.DatasetStreamerAdapter | None,
     ) -> None:
         """
         data_root: top folder of 2011_09_26 raw KITTI data
@@ -36,7 +38,7 @@ class KittiStreamer(base.DatasetStreamer):
         self.total: int = len(self.left_images)
         print("Found ", self.total, " images")
 
-        self.dataset_streamer_adapter: base.DatasetStreamerAdapter = (
+        self.dataset_streamer_adapter: base.DatasetStreamerAdapter | None = (
             dataset_streamer_adapter
         )
 
@@ -65,6 +67,9 @@ class KittiStreamer(base.DatasetStreamer):
 
     def run(self) -> None:
         """Runs stream in given frequency in Hz."""
+        if self.dataset_streamer_adapter is None:
+            print("Error: Dataset streamer adapter is None.")
+            return
 
         while self.has_next():
 
